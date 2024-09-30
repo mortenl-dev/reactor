@@ -153,30 +153,7 @@ namespace WorldOfZuul
         }
 
         public static void Morten() {
-            new animText("Welcome to your interview at Mortcorp!");
-            Character c = new Character() {Name = "Morten", Gender = false, };
-            new animText($"Your name was {c.Name}, right?");
-            var response = AnsiConsole.Prompt(
-                new SelectionPrompt<string>()
-                    .Title("Select how you wish to respond.")
-                    .PageSize(10)
-                    .AddChoices("Yes","No")); 
-
-            if (response == "No") {
-                new animText("Then what are you doing here? Please leave.");
-                return;
-            }
             
-            new animText("Alright, let's begin the interview.");
-            
-            Interview interview = new Interview() {Questions = [
-                Promptlist.List[0],
-                Promptlist.List[1],
-                Promptlist.List[2],
-                Promptlist.List[3],
-                Promptlist.List[4],
-                ]};
-            interview.Start(c);
         }
     }
 }
