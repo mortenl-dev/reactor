@@ -1,0 +1,182 @@
+﻿using Spectre.Console;
+using static System.Console;
+using Spectre.Console.Cli;
+namespace WorldOfZuul
+{
+    public class Game
+    {
+        private Room? currentRoom;
+        private Room? previousRoom;
+
+        public Game()
+        {
+            CreateRooms();
+        }
+
+        private void CreateRooms()
+        {
+  
+            Room? outside = new("Outside", "You are standing outside the main entrance of the university. To the east is a large building, to the south is a computing lab, and to the west is the campus pub.");
+            Room? theatre = new("Theatre", "You find yourself inside a large lecture theatre. Rows of seats ascend up to the back, and there's a podium at the front. It's quite dark and quiet.");
+            Room? pub = new("Pub", "You've entered the campus pub. It's a cozy place, with a few students chatting over drinks. There's a bar near you and some pool tables at the far end.");
+            Room? lab = new("Lab", "You're in a computing lab. Desks with computers line the walls, and there's an office to the east. The hum of machines fills the room.");
+            Room? office = new("Office", "You've entered what seems to be an administration office. There's a large desk with a computer on it, and some bookshelves lining one wall.");
+
+            outside.SetExits(null, theatre, lab, pub); // North, East, South, West
+
+            theatre.SetExit("west", outside);
+
+            pub.SetExit("east", outside);
+
+            lab.SetExits(outside, office, null, null);
+
+            office.SetExit("west", lab);
+
+            currentRoom = outside;
+        }
+
+        public void Play()
+        {
+            Parser parser = new();
+
+            PrintWelcome();
+
+            bool continuePlaying = true;
+            while (continuePlaying)
+            {
+                Console.WriteLine(currentRoom?.ShortDescription);
+                Console.Write("> ");
+
+                string? input = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(input))
+                {
+                    Console.WriteLine("Please enter a command.");
+                    continue;
+                }
+
+                Command? command = parser.GetCommand(input);
+
+                if (command == null)
+                {
+                    Console.WriteLine("I don't know that command.");
+                    continue;
+                }
+
+                switch(command.Name)
+                {
+                    case "look":
+                        Console.WriteLine(currentRoom?.LongDescription);
+                        break;
+
+                    case "back":
+                        if (previousRoom == null)
+                            Console.WriteLine("You can't go back from here!");
+                        else
+                            currentRoom = previousRoom;
+                        break;
+
+                    case "north":
+                    case "south":
+                    case "east":
+                    case "west":
+                        Move(command.Name);
+                        break;
+
+                    case "quit":
+                        continuePlaying = false;
+                        break;
+
+                    case "help":
+                        PrintHelp();
+                        break;
+                    case "morten":
+                        Morten();
+                        
+                        break;
+                    default:
+                        Console.WriteLine("I don't know what command.");
+                        break;
+                }
+            }
+            
+            Console.WriteLine("Thank you for playing World of Zuul!");
+            Thread.Sleep(1000);
+        }
+
+        private void Move(string direction)
+        {
+            if (currentRoom?.Exits.ContainsKey(direction) == true)
+            {
+                previousRoom = currentRoom;
+                currentRoom = currentRoom?.Exits[direction];
+            }
+            else
+            {
+                Console.WriteLine($"You can't go {direction}!");
+            }
+        }
+
+
+        private static void PrintWelcome()
+        {   
+            
+            Console.WriteLine("Welcome to the World of Zuul!");
+            Console.WriteLine("World of Zuul is a new, incredibly boring adventure game.");
+            PrintHelp();
+            Console.WriteLine();
+
+                                                                                                                                         
+                
+
+    
+        }
+
+        private static void PrintHelp()
+        {
+            var table = new Table();
+            table.AddColumn("Commands");
+            table.AddColumn("Description");
+
+            table.AddRow(new string[]{"look", "inspects the current location."});
+            table.AddRow(new string[]{"back", "moves you back to the previous room."});
+            table.AddRow(new string[]{"help", "print this message again."});
+            table.AddRow(new string[]{"quit", "alt+f4."});
+            
+            AnsiConsole.Write(table);
+            Console.WriteLine("You are lost. You are alone. You wander");
+            Console.WriteLine("around the university.");
+            Console.WriteLine();
+            Console.WriteLine("Navigate by typing 'north', 'south', 'east', or 'west'.");
+
+            
+        }
+
+        public static void Morten() {
+            new animText("Welcome to your interview at Mortcorp!");
+            Character c = new Character() {Name = "Morten", Gender = false, };
+            new animText($"Your name was {c.Name}, right?");
+            var response = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Select how you wish to respond.")
+                    .PageSize(10)
+                    .AddChoices("Yes","No")); 
+
+            if (response == "No") {
+                new animText("Then what are you doing here? Please leave.");
+                return;
+            }
+            
+            new animText("Alright, let's begin the interview.");
+            
+            Interview interview = new Interview() {Questions = [
+                Promptlist.List[0],
+                Promptlist.List[1],
+                Promptlist.List[2],
+                Promptlist.List[3],
+                Promptlist.List[4],
+                ]};
+            interview.Start(c);
+        }
+    }
+}
