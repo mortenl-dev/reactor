@@ -76,14 +76,13 @@ to maintain modularity, extensibility, and maintainability.
 */
 
 
-namespace WorldOfZuul
+namespace Reactor
 {
     public class Program
     {
         public static void Main()
         {   
             Game game = new();
-            game.Play();
         }
     }
 }
