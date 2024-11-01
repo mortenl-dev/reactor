@@ -7,8 +7,37 @@ namespace Reactor
     {
 
         public Game()
-        {
+        {   
+            PrintIntro();
+            
+            Reactor reactor = new Reactor( //INIT REACTOR WITH VALUES
 
+                    new Structure() {
+                        integrity = 5,
+                    },
+                    new Location() {
+                        name = "Russia",
+                        description = "russia desc",
+                        entropy = 10,
+                    },
+                    new Cooling() {
+                        name = "cool coolant",
+                        description = "cooling desc",
+                        coolingRate = 5,
+                        price = 4,
+                        turnover = 2,
+                    },
+                    new Fuel() {
+                    name = "Uranium",
+                    description = "insert desc",
+                    consumptionRate = 5,
+                    productionRate = 10,
+                    price = 3,
+                    turnover = 2,
+                }) 
+                {
+                
+            };
         }
 
         private static void PrintHelp()
@@ -31,7 +60,7 @@ namespace Reactor
             
         }
 
-        public static void Morten() {
+        private static void PrintIntro() {
             
         }
     }
